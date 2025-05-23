@@ -1,10 +1,7 @@
-<?php 
-session_start();
-$sql = "SELECT * FROM bahan";
-
+<?php
 try {
-    $conn = new \PDO('sqlite:./db/jamu.db');
+    $conn = new PDO('sqlite:' . __DIR__ . '/db/jamu.db');
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (\PDOException $e) {
-    echo "Error: " . $e->getMessage();
+} catch (PDOException $e) {
+    die("Koneksi gagal: " . $e->getMessage());
 }

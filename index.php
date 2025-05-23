@@ -84,6 +84,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header("Location: " . $_SERVER['PHP_SELF'] . "?keranjang=1");
         exit;
     }
+    if (isset($_POST['tambah_racikan_keranjang'])) {
+        $id = $_POST['racikan_id'];
+
+        $stmt = $conn->prepare("SELECT * FROM racikan_bahan rb JOIN bahan b ON rb.bahan_id = b.id WHERE rb.racikan_id = ?");
+        $stmt->execute([$id]);
+        $bahanList = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if (!isset($_SESSION['keranjang'])) {
+            $_SESSION['keranjang'] = [];
+        }
+
+        foreach ($bahanList as $bahan) {
+            $idBahan = $bahan['bahan_id'];
+            $jumlah = $bahan['jumlah'];
+
+            if (isset($_SESSION['keranjang'][$idBahan])) {
+                $_SESSION['keranjang'][$idBahan]['jumlah'] += $jumlah;
+            } else {
+                $_SESSION['keranjang'][$idBahan] = [
+                    'nama' => $bahan['nama'],
+                    'harga' => $bahan['harga'],
+                    'jumlah' => $jumlah
+                ];
+            }
+        }
+
+        header("Location: " . $_SERVER['PHP_SELF'] . "?keranjang=1");
+        exit;
+    }
 
 
 
@@ -110,6 +139,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     } elseif ($keranjang) {
         echo renderKeranjang();
+    } elseif (isset($_GET['racikan'])) {
+        echo renderRacikanList();
+    } elseif (isset($_GET['lihat_racikan'])) {
+        $id = intval($_GET['lihat_racikan']);
+        echo renderDetailRacikan($id); 
     } elseif (isset($_GET['bayar'])) {
         echo renderPembayaran();
     } elseif (isset($_GET['selesai'])) {
@@ -229,12 +263,14 @@ function renderListingBahan($daftarBahan) {
     <body>
       <h1>Selamat datang di Jamuku</h1>
       <p><a href="?keranjang=1">Lihat Keranjang</a></p>
+      <a href="?racikan=1">Lihat Racikan</a>
       <h2>Daftar Bahan</h2>
       {$list}
     
     </body>
     </html>
   HTML;
+  $list .= renderListingRacikan($GLOBALS['conn']);
 }
   
 
@@ -287,6 +323,52 @@ function renderPembayaran() {
         <button type="submit">Selesai</button>
     </form>
     <?php return ob_get_clean();
+}
+function renderRacikanList() {
+    global $conn;
+    $stmt = $conn->query("SELECT * FROM racikan");
+    $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $html = "<h2>Daftar Racikan</h2><a href='racikan/tambah_racikan.php'>➕ Tambah Racikan</a><ul>";
+    foreach ($data as $r) {
+       $html .= "<li><strong>{$r['nama']}</strong> - <a href='/index.php?lihat_racikan={$r['id']}'>Lihat Detail</a></li>";
+    }
+    $html .= "</ul><p><a href='{$_SERVER['SCRIPT_NAME']}'>⬅ Kembali ke Daftar</a></p>";
+    return $html;
+}
+
+function renderDetailRacikan($id) {
+    global $conn;
+    $stmt = $conn->prepare("SELECT * FROM racikan WHERE id = ?");
+    $stmt->execute([$id]);
+    $racikan = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    $html = "<h2>Detail Racikan: {$racikan['nama']}</h2><p>{$racikan['deskripsi']}</p>";
+
+    $stmt = $conn->prepare("SELECT b.nama, b.harga, rb.jumlah FROM racikan_bahan rb JOIN bahan b ON rb.bahan_id = b.id WHERE rb.racikan_id = ?");
+    $stmt->execute([$id]);
+    $bahanList = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $total = 0;
+    $html .= "<table border='1'><tr><th>Nama Bahan</th><th>Jumlah</th><th>Subtotal</th></tr>";
+    foreach ($bahanList as $b) {
+        $subtotal = $b['harga'] * $b['jumlah'];
+        $total += $subtotal;
+        $html .= "<tr><td>{$b['nama']}</td><td>{$b['jumlah']}</td><td>Rp " . number_format($subtotal) . "</td></tr>";
+    }
+    $html .= "<tr><td colspan='2'><strong>Total</strong></td><td><strong>Rp " . number_format($total) . "</strong></td></tr></table>";
+
+    $html .= <<<HTML
+        <form method="POST">
+            <input type="hidden" name="racikan_id" value="{$id}">
+            <button type="submit" name="tambah_racikan_keranjang">Tambahkan ke Keranjang</button>
+        </form>
+        <p><a href="racikan/edit_racikan.php?id={$id}">Edit Racikan</a> | 
+           <a href="racikan/hapus_racikan.php?id={$id}" onclick="return confirm('Hapus racikan ini?')">🗑️ Hapus</a></p>
+    HTML;
+
+    $html .= "<p><a href='/index.php'>⬅ Kembali ke Daftar Racikan</a></p>";
+    return $html;
 }
 
 ?>
