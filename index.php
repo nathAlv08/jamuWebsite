@@ -114,8 +114,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
       } else {
         echo "<p>ERROR.</p>";
       }
+
     } elseif ($keranjang) {
         echo renderKeranjang();
+    } elseif (isset($_GET['bayar'])) {
+        echo renderPembayaran();
+    } elseif (isset($_GET['selesai'])) {
+        unset($_SESSION['rincian_bayar']);
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit;
     } else {
     
       $sql = 'SELECT * FROM bahan';
@@ -247,5 +254,46 @@ function renderDetailBahan($bahan) {
     <a href="{$_SERVER['SCRIPT_NAME']}">Kembali ke Daftar Bahan</a>
   HTML;
   }
+function renderPembayaran() {
+    $rincian = $_SESSION['rincian_bayar'] ?? [];
+
+    if (empty($rincian)) {
+        return "<p>Tidak ada item untuk dibayar.</p><p><a href='{$_SERVER['SCRIPT_NAME']}'>⬅ Kembali ke Daftar</a></p>";
+    }
+
+    ob_start(); ?>
+    <h2>Rincian Pembayaran</h2>
+    <table border="1" cellpadding="5" cellspacing="0">
+        <tr>
+            <th>Nama</th>
+            <th>Harga</th>
+            <th>Jumlah</th>
+            <th>Subtotal</th>
+        </tr>
+        <?php 
+        $total = 0;
+        foreach ($rincian as $item):
+            $subtotal = $item['harga'] * $item['jumlah'];
+            $total += $subtotal;
+        ?>
+            <tr>
+                <td><?= htmlspecialchars($item['nama']) ?></td>
+                <td>Rp <?= number_format($item['harga']) ?></td>
+                <td><?= $item['jumlah'] ?></td>
+                <td>Rp <?= number_format($subtotal) ?></td>
+            </tr>
+        <?php endforeach; ?>
+        <tr>
+            <td colspan="3"><strong>Total</strong></td>
+            <td><strong>Rp <?= number_format($total) ?></strong></td>
+        </tr>
+    </table>
+    <p>Pembayaran berhasil diproses! Terima kasih atas pembelian Anda.</p>
+    <form method="POST">
+        <input type="hidden" name="aksi" value="selesai">
+        <button type="submit">Selesai</button>
+    </form>
+    <?php return ob_get_clean();
+}
 
 ?>
