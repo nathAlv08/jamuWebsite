@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS bahan;
 CREATE TABLE bahan (
   id INTEGER PRIMARY KEY,
   nama TEXT NOT NULL,
@@ -30,3 +31,21 @@ INSERT INTO bahan (nama, jenis, deskripsi, harga) VALUES
 ('Soda','Bahan tambahan','Memberi sensasi segar dan rasa modern pada jamu',1000),
 ('Mint','Bahan tambahan','Memberi sensasi segar, antibakteri',800),
 ('Stevia','Pemanis','Menambah rasa manis alami, sumber energi',2000);
+
+
+DROP TABLE IF EXISTS racikan_bahan;
+DROP TABLE IF EXISTS racikan;
+CREATE TABLE racikan (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nama TEXT NOT NULL,
+    deskripsi TEXT
+);
+
+CREATE TABLE racikan_bahan (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    racikan_id INTEGER,
+    bahan_id INTEGER,
+    jumlah INTEGER,
+    FOREIGN KEY (racikan_id) REFERENCES racikan(id),
+    FOREIGN KEY (bahan_id) REFERENCES bahan(id)
+);
