@@ -1,0 +1,557 @@
+:root {
+    --color-primary: #388E3C; /* Hijau Jamu */
+    --color-secondary: #FFC107; /* Kuning Kecil, Aksen*/
+    --color-text-dark: #212121; /* Teks gelap, judul */
+    --color-text-light: #555; /* Teks paragraf, umum */
+    --color-background: #F8F8F8; /* Latar belakang body */
+    --color-white: #FFFFFF;
+    --color-border: #E0E0E0; /* Garis tepi */
+    --color-success: #4CAF50; /* Tombol tambah/sukses */
+    --color-warning: #FF9800; /* Tombol bayar/peringatan */
+    --color-danger: #F44336; /* Tombol hapus/bahaya */
+    --color-sidebar-bg: #4CAF50; /* Warna hijau untuk sidebar */
+    --color-sidebar-link: #E8F5E9; /* Warna teks link di sidebar */
+    --color-sidebar-hover: #A5D6A7; /* Warna hover link di sidebar */
+    --header-height: 70px; /* Tinggi navbar, akan digunakan untuk offsetting */
+    --container-max-width: 1400px; /* Lebar maksimum untuk konten utama yang terpusat */
+    --page-padding-x: 30px; /* Padding horizontal dari tepi layar */
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    background-color: var(--color-background);
+    color: var(--color-text-light);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+.layout-wrapper {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    width: 100%;
+}
+
+.header-wrapper {
+    background-color: var(--color-primary);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+    min-height: var(--header-height);
+    display: flex;
+    align-items: center;
+}
+
+.navbar {
+    padding: 0;
+    width: 100%;
+}
+
+.navbar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: var(--container-max-width);
+    margin: 0 auto; 
+    padding: 0 var(--page-padding-x);
+}
+
+.navbar-brand {
+    color: var(--color-white);
+    font-size: 1.8em;
+    font-weight: bold;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.navbar-brand:hover {
+    color: var(--color-secondary);
+    text-decoration: none;
+}
+
+.nav-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+.nav-links li {
+    margin-left: 25px;
+    background: none;
+    box-shadow: none;
+    border: none;
+    padding: 0;
+}
+
+.nav-links li a {
+    color: var(--color-white);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1.05em;
+    padding: 5px 0;
+    position: relative;
+}
+
+.nav-links li a:hover {
+    color: var(--color-secondary);
+    text-decoration: none;
+}
+
+.nav-links li a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: var(--color-secondary);
+    transition: width 0.3s ease;
+}
+
+.nav-links li a:hover::after {
+    width: 100%;
+}
+
+.main-area {
+    display: flex;
+    flex-grow: 1;
+    max-width: var(--container-max-width);
+    margin: 0 auto; 
+    padding: 30px var(--page-padding-x);
+    box-sizing: border-box;
+    align-items: flex-start;
+}
+
+
+.sidebar {
+    width: 250px;
+    background-color: var(--color-sidebar-bg);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    margin-right: 30px;
+    flex-shrink: 0;
+
+    position: sticky;
+    top: calc(var(--header-height) + 20px);
+    align-self: flex-start;
+    max-height: calc(100vh - var(--header-height) - (2 * var(--page-padding-x)));
+    overflow-y: auto;
+}
+
+.sidebar h3 {
+    color: var(--color-white);
+    margin-top: 0;
+    margin-bottom: 15px;
+    border-bottom: 1px solid rgba(255,255,255,0.3);
+    padding-bottom: 10px;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar ul li {
+    margin-bottom: 10px;
+    background: none;
+    box-shadow: none;
+    border: none;
+    padding: 0;
+}
+
+.sidebar ul li a {
+    display: block;
+    padding: 8px 10px;
+    color: var(--color-sidebar-link);
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.sidebar ul li a:hover {
+    background-color: var(--color-sidebar-hover);
+    color: var(--color-primary);
+    text-decoration: none;
+}
+.sidebar ul li a.active {
+    background-color: var(--color-sidebar-hover);
+    color: var(--color-primary);
+    font-weight: bold;
+}
+
+.sidebar ul li:not(:first-child) a {
+    padding-left: 30px;
+}
+.sidebar ul li:first-child a {
+    font-weight: bold;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+    margin-bottom: 5px;
+    padding-bottom: 10px;
+}
+
+
+
+.container.main-content {
+    flex-grow: 1;
+    padding: 40px;
+    background-color: var(--color-white);
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    min-height: 500px;
+    width: auto; 
+}
+
+.container.main-content.no-sidebar {
+    margin: 0 auto;
+    width: auto; 
+}
+
+
+h1, h2, h3 {
+    color: var(--color-text-dark);
+    margin-top: 0;
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--color-border);
+    padding-bottom: 10px;
+}
+
+a {
+    color: var(--color-primary);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: var(--color-secondary);
+    text-decoration: underline;
+}
+
+ol, ul {
+    list-style: none;
+    padding: 0;
+}
+
+ol li, ul li {
+    background: var(--color-white);
+    margin-bottom: 15px;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    border: 1px solid var(--color-border);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+ol li:hover, ul li:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+ol li strong, ul li strong {
+    color: var(--color-primary);
+    font-size: 1.1em;
+}
+
+ol li p, ul li p {
+    margin: 8px 0;
+}
+
+/* Gaya untuk konten di dalam setiap item bahan (gambar + detail) */
+.bahan-item-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.bahan-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover; 
+    border-radius: 8px; 
+    flex-shrink: 0;
+    border: 1px solid var(--color-border);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.bahan-details {
+    flex-grow: 1; 
+}
+
+
+form {
+    background: var(--color-white);
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    margin-top: 25px;
+    border: 1px solid var(--color-border);
+}
+
+form label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: var(--color-text-dark);
+}
+
+form input[type="text"],
+form input[type="number"],
+form textarea {
+    width: calc(100% - 24px);
+    padding: 12px;
+    margin-bottom: 18px;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    font-size: 1em;
+    box-sizing: border-box;
+}
+
+form textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+button {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    padding: 12px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: bold;
+    margin-right: 10px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+    background-color: #2E7D32;
+    transform: translateY(-2px);
+}
+
+button[name="tambah"] {
+    background-color: var(--color-primary);
+}
+button[name="tambah"]:hover {
+    background-color: #2E7D32;
+}
+
+button[name="bayar"] {
+    background-color: var(--color-warning);
+}
+button[name="bayar"]:hover {
+    background-color: #FB8C00;
+}
+
+button[name="aksi"][value="kosongkan"],
+button[onclick*="confirm('Kosongkan"] {
+    background-color: var(--color-danger);
+}
+button[name="aksi"][value="kosongkan"]:hover,
+button[onclick*="confirm('Kosongkan"]:hover {
+    background-color: #D32F2F;
+}
+
+button[name="hapus"] {
+    background-color: var(--color-danger);
+}
+button[name="hapus"]:hover {
+    background-color: #D32F2F;
+}
+
+/* --- Table Styles --- */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 25px;
+    background: var(--color-white);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    border: 1px solid var(--color-border);
+}
+
+table th, table td {
+    padding: 15px 20px;
+    border: 1px solid var(--color-border);
+    text-align: left;
+}
+
+table th {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.9em;
+}
+
+table tr:nth-child(even) {
+    background-color: #FDFDFD;
+}
+
+table tr:hover {
+    background-color: #F5F5F5;
+}
+
+table td form {
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+    background: none;
+    border: none;
+}
+
+table td form button {
+    padding: 6px 10px;
+    font-size: 0.9em;
+    margin: 0 3px;
+    background-color: #607D8B;
+}
+table td form button:hover {
+    background-color: #455A64;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.margin-top-20 {
+    margin-top: 20px;
+}
+
+footer {
+    background-color: var(--color-text-dark);
+    color: var(--color-white);
+    padding: 20px 0;
+    text-align: center;
+    margin-top: auto;
+    width: 100%;
+}
+
+footer .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+
+@media (max-width: 1400px) {
+    .navbar .container,
+    .main-area {
+        max-width: 1200px;
+    }
+}
+
+@media (max-width: 992px) {
+    .navbar .container,
+    .main-area {
+        max-width: 960px;
+        padding: 0 20px;
+    }
+    .sidebar {
+        width: 200px;
+        margin-right: 20px;
+    }
+    .container.main-content {
+        padding: 30px;
+    }
+}
+
+@media (max-width: 768px) {
+    
+    .navbar .container {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 0 20px;
+    }
+
+    .nav-links {
+        flex-direction: column;
+        width: 100%;
+        margin-top: 15px;
+    }
+
+    .nav-links li {
+        margin: 0 0 10px 0;
+    }
+
+    
+    .main-area {
+        flex-direction: column;
+        padding: 20px;
+        max-width: 100%; 
+    }
+
+
+    .sidebar {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 20px;
+        position: static;
+        max-height: none;
+        overflow-y: visible;
+    }
+
+
+    .container.main-content {
+        padding: 20px;
+    }
+    .main-area .container.main-content.no-sidebar {
+        margin-top: 0;
+    }
+
+   
+    .bahan-item-content {
+        flex-direction: column; 
+        align-items: center; 
+        text-align: center;
+    }
+
+    .bahan-image {
+        width: 120px;
+        height: 120px;
+        margin-bottom: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+    .container {
+        padding: 15px;
+    }
+    .navbar .container {
+        padding: 0 10px;
+    }
+    .sidebar {
+        padding: 10px;
+    }
+    table th, table td {
+        padding: 8px;
+        font-size: 0.75em;
+    }
+    form button {
+        padding: 8px 12px;
+        font-size: 0.8em;
+    }
+    form input[type="text"],
+    form input[type="number"],
+    form textarea {
+        padding: 8px;
+    }
+}
